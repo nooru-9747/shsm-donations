@@ -30,7 +30,9 @@ export async function getMemberBalances() {
       const memberPayments = paymentRows.filter(p => p.get("MemberID") === id);
       const totalPaid = memberPayments.reduce((sum, p) => sum + parseFloat(p.get("AmountPaid") || "0"), 0);
 
-      const outstanding = Math.max(0, totalExpected - totalPaid);
+      const diff = totalExpected - totalPaid;
+      const outstanding = diff > 0 ? diff : 0;
+      const advance = diff < 0 ? Math.abs(diff) : 0;
 
       return {
         id,
@@ -41,6 +43,7 @@ export async function getMemberBalances() {
         totalExpected,
         totalPaid,
         outstanding,
+        advance,
       };
     });
   } catch (error) {

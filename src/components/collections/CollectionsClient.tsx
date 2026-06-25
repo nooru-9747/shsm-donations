@@ -13,6 +13,7 @@ type MemberBalance = {
   totalExpected: number;
   totalPaid: number;
   outstanding: number;
+  advance: number;
 };
 
 export default function CollectionsClient({ balances }: { balances: MemberBalance[] }) {
@@ -50,7 +51,7 @@ export default function CollectionsClient({ balances }: { balances: MemberBalanc
                 <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-emerald-900">Name</th>
                 <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-emerald-900">Expected</th>
                 <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-emerald-900">Paid Total</th>
-                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-red-700">Outstanding</th>
+                <th scope="col" className="px-3 py-3.5 text-left text-sm font-semibold text-emerald-900">Status</th>
                 <th scope="col" className="relative py-3.5 pl-3 pr-4 sm:pr-6">
                   <span className="sr-only">Action</span>
                 </th>
@@ -79,23 +80,23 @@ export default function CollectionsClient({ balances }: { balances: MemberBalanc
                     <td className="whitespace-nowrap px-3 py-4 text-sm text-emerald-600 font-medium">
                       ₹{member.totalPaid}
                     </td>
-                    <td className="whitespace-nowrap px-3 py-4 text-sm font-bold text-red-600">
-                      ₹{member.outstanding}
+                    <td className="whitespace-nowrap px-3 py-4 text-sm font-bold">
+                      {member.outstanding > 0 ? (
+                        <span className="text-red-600">Dues: ₹{member.outstanding}</span>
+                      ) : member.advance > 0 ? (
+                        <span className="text-emerald-600">Advance: ₹{member.advance}</span>
+                      ) : (
+                        <span className="text-slate-500">Settled (₹0)</span>
+                      )}
                     </td>
                     <td className="relative whitespace-nowrap py-4 pl-3 pr-4 text-right text-sm font-medium sm:pr-6">
-                      {member.outstanding > 0 ? (
-                        <button
-                          onClick={() => setSelectedMember(member)}
-                          className="inline-flex items-center rounded-md bg-emerald-100 px-2.5 py-1.5 text-sm font-semibold text-emerald-700 shadow-sm hover:bg-emerald-200 transition-colors"
-                        >
-                          <IndianRupee className="w-4 h-4 mr-1" />
-                          Collect
-                        </button>
-                      ) : (
-                        <span className="inline-flex items-center rounded-md bg-emerald-50 px-2.5 py-1.5 text-sm font-medium text-emerald-700 ring-1 ring-inset ring-emerald-600/20">
-                          Settled
-                        </span>
-                      )}
+                      <button
+                        onClick={() => setSelectedMember(member)}
+                        className="inline-flex items-center rounded-md bg-emerald-100 px-2.5 py-1.5 text-sm font-semibold text-emerald-700 shadow-sm hover:bg-emerald-200 transition-colors"
+                      >
+                        <IndianRupee className="w-4 h-4 mr-1" />
+                        Collect
+                      </button>
                     </td>
                   </tr>
                 ))

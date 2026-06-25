@@ -64,7 +64,8 @@ export default async function ReportsPage() {
                 <th scope="col" className="py-3.5 pl-4 pr-3 text-left text-sm font-semibold text-emerald-900">Member</th>
                 <th scope="col" className="px-3 py-3.5 text-right text-sm font-semibold text-emerald-900">Expected</th>
                 <th scope="col" className="px-3 py-3.5 text-right text-sm font-semibold text-emerald-900">Collected</th>
-                <th scope="col" className="px-3 py-3.5 text-right text-sm font-semibold text-emerald-900">Outstanding</th>
+                <th scope="col" className="px-3 py-3.5 text-right text-sm font-semibold text-emerald-900">Advance</th>
+                <th scope="col" className="px-3 py-3.5 text-right text-sm font-semibold text-emerald-900">Dues</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-emerald-50 bg-white">
@@ -80,8 +81,11 @@ export default async function ReportsPage() {
                   <td className="whitespace-nowrap px-3 py-4 text-sm text-emerald-600 font-medium text-right">
                     ₹{member.totalPaid}
                   </td>
+                  <td className="whitespace-nowrap px-3 py-4 text-sm font-bold text-emerald-600 text-right">
+                    {member.advance > 0 ? `₹${member.advance}` : "—"}
+                  </td>
                   <td className="whitespace-nowrap px-3 py-4 text-sm font-bold text-red-600 text-right">
-                    ₹{member.outstanding}
+                    {member.outstanding > 0 ? `₹${member.outstanding}` : "—"}
                   </td>
                 </tr>
               ))}

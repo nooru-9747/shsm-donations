@@ -10,6 +10,8 @@ type PaymentModalProps = {
     id: string;
     name: string;
     outstanding: number;
+    advance: number;
+    monthlyAmount: number;
   };
   onClose: () => void;
 };
@@ -17,7 +19,9 @@ type PaymentModalProps = {
 export default function PaymentModal({ member, onClose }: PaymentModalProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
-  const [amount, setAmount] = useState(member.outstanding.toString());
+  // Default amount: if they have dues, suggest paying dues. Otherwise, suggest their monthly amount.
+  const defaultAmount = member.outstanding > 0 ? member.outstanding : member.monthlyAmount;
+  const [amount, setAmount] = useState(defaultAmount.toString());
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -44,7 +48,7 @@ export default function PaymentModal({ member, onClose }: PaymentModalProps) {
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-900/50 backdrop-blur-sm">
       <div className="bg-white rounded-xl shadow-xl w-full max-w-md overflow-hidden animate-in fade-in zoom-in-95 duration-200">
         <div className="flex items-center justify-between p-4 border-b border-emerald-100 bg-emerald-50">
-          <h3 className="text-lg font-semibold text-emerald-900">Mark Payment</h3>
+          <h3 className="text-lg font-semibold text-emerald-900">Collect Payment</h3>
           <button onClick={onClose} className="text-emerald-500 hover:text-emerald-700">
             <X className="w-5 h-5" />
           </button>
@@ -56,9 +60,15 @@ export default function PaymentModal({ member, onClose }: PaymentModalProps) {
             <p className="font-medium text-slate-900">{member.name}</p>
           </div>
           
-          <div>
-            <p className="text-sm text-slate-500">Total Outstanding</p>
-            <p className="font-semibold text-red-600">₹{member.outstanding}</p>
+          <div className="flex justify-between items-center bg-slate-50 p-3 rounded-lg border border-slate-100">
+            <div>
+              <p className="text-sm text-slate-500">Current Dues</p>
+              <p className="font-semibold text-red-600">₹{member.outstanding}</p>
+            </div>
+            <div className="text-right">
+              <p className="text-sm text-slate-500">Current Advance</p>
+              <p className="font-semibold text-emerald-600">₹{member.advance}</p>
+            </div>
           </div>
 
           <div>
@@ -68,13 +78,16 @@ export default function PaymentModal({ member, onClose }: PaymentModalProps) {
             <input
               type="number"
               id="amount"
-              min="0"
-              max={member.outstanding}
+              min="1"
               required
               value={amount}
               onChange={(e) => setAmount(e.target.value)}
               className="block w-full rounded-md border-0 py-2 px-3 text-slate-900 shadow-sm ring-1 ring-inset ring-emerald-200 focus:ring-2 focus:ring-inset focus:ring-emerald-600 sm:text-sm sm:leading-6"
+              placeholder="Enter amount..."
             />
+            <p className="mt-1 text-xs text-slate-500">
+              Any amount paid above the current dues will be automatically saved as an Advance.
+            </p>
           </div>
 
           <div className="pt-4 flex justify-end gap-3 border-t border-emerald-50">
