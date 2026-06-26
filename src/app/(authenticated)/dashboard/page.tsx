@@ -4,6 +4,7 @@ import { Users, CreditCard, AlertCircle, TrendingUp } from "lucide-react";
 import { getDashboardStats } from "@/app/actions/dashboard";
 import DashboardCharts from "@/components/dashboard/DashboardCharts";
 import { getMemberBalances } from "@/app/actions/collections";
+import ExportReportCard from "@/components/dashboard/ExportReportCard";
 
 export default async function DashboardPage() {
   const session = await getServerSession(authOptions);
@@ -88,6 +89,11 @@ export default async function DashboardPage() {
             )}
           </div>
         </div>
+      </div>
+
+      {/* Export card always below on all screen sizes */}
+      <div className="mt-8">
+        <ExportReportCard />
       </div>
     </div>
   );
